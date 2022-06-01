@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	<div class="container">
+		<div class="card bg-light">
+			<div class="card-header">
+				<h1 class="mt-2 text-primary"
+					th:text="${titulo}">
+				</h1>
+			</div>
+			<div class="card-body">
+				<table class="table table-dark table-striped mt-3">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Nombre</th>
+							<th>Apellido</th>
+							<th>Email</th>
+							<th>Creado</th>
+							<th>Crear Factura</th>
+							<th>Editar</th>
+							<th>Eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="cliente: ${clientes}">
+							<td><a class="btn btn-primary btn-xs" th:href="@{/ver/} + ${cliente.id}" th:text="${cliente.id}"></a></td>
+							<td th:text="${cliente.nombre}"></td>
+							<td th:text="${cliente.apellido}"></td>
+							<td th:text="${cliente.email}"></td>
+							<td th:text="${cliente.createAt}"></td>
+							<td>
+								<a class="btn btn-warning" 
+								   th:href="@{/factura/form/} + ${cliente.id}" 
+								   th:text="'Crear Factura'" />
+							</td>
+							<td>
+								<a class="btn btn-success" 
+								   th:href="@{/form/} + ${cliente.id}" 
+								   th:text="'Editar'" />
+							</td>
+							<td>
+								<a class="btn btn-danger" 
+								   th:href="@{/eliminar/} + ${cliente.id}" 
+								   th:text="'Eliminar'" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<nav th:replace="paginator-nav :: paginator"></nav>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

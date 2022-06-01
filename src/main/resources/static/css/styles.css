@@ -1,0 +1,20 @@
+.text-danger {
+	color: red;
+	font-weight: 500;
+}
+
+.mw-20-rem {
+	max-width: 20rem;
+}
+
+.mw-25 {
+	max-width: 25%;
+}
+
+.mw-50 {
+	max-width: 50%;
+}
+
+.mw-100 {
+	max-width: 100%;
+}
