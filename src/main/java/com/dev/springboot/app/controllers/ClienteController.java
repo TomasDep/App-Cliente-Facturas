@@ -2,11 +2,23 @@ package com.dev.springboot.app.controllers;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+// import java.util.Collection;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+// import org.springframework.security.core.GrantedAuthority;
+// import org.springframework.security.core.authority.SimpleGrantedAuthority;
+// import org.springframework.security.core.context.SecurityContext;
+// import org.springframework.security.core.context.SecurityContextHolder;
+// import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,12 +45,15 @@ import com.dev.springboot.app.util.paginator.PageRender;
 @Controller
 @SessionAttributes("cliente")
 public class ClienteController {
+	protected final Log logger = LogFactory.getLog(getClass());
+	
 	@Autowired
 	private IClienteService clienteService;
 	
 	@Autowired
 	private IUploadFileService uploadFileService;
 	
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/uploads/{filename:.+}")
 	public ResponseEntity<Resource> verFoto(@PathVariable String filename) {
 		
@@ -55,6 +70,7 @@ public class ClienteController {
 				.body(recurso);
 	}
 	
+	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
 	@GetMapping("/ver/{id}")
 	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 		// Cliente cliente = this.clienteService.findOne(id);
@@ -72,7 +88,46 @@ public class ClienteController {
 	}
 	
 	@GetMapping({"/listar", "/"})
-	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+	public String listar(
+			@RequestParam(name = "page", defaultValue = "0") int page, 
+			Model model,
+			Authentication authentication,
+			HttpServletRequest request
+	) {
+		if (authentication != null) {
+			logger.info("Usuario autenticado, USERNAME: ".concat(authentication.getName()));
+		}
+		
+		/*
+		if (this.hasRole("ROLE_ADMIN")) {
+			logger.info("Administrador ".concat(authentication.getName().concat(" tienes acceso a los recursos")));
+		} else {
+			logger.info("Usuario ".concat(authentication.getName().concat(" NO tienes acceso a los recursos")));
+		}
+		*/
+		/*
+		SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "ROLE_");
+		
+		if (securityContext.isUserInRole("ADMIN")) {
+			logger.info("(Otra Forma) Administrador ".concat(authentication.getName().concat(" tienes acceso a los recursos")));
+		} else {
+			logger.info("(Otra Forma) Usuario ".concat(authentication.getName().concat(" NO tienes acceso a los recursos")));
+		}
+		*/
+		
+		if (request.isUserInRole("ADMIN")) {
+			logger.info("(Forma Request) Administrador ".concat(authentication.getName().concat(" tienes acceso a los recursos")));
+		} else {
+			logger.info("(Forma Request) Usuario ".concat(authentication.getName().concat(" NO tienes acceso a los recursos")));
+		}
+		
+		/*
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+		
+		if (authentication != null) {
+			logger.info("Usuario autenticado(forma estatica), USERNAME: ".concat(auth.getName()));
+		}
+		*/
 		Pageable pageRequest = PageRequest.of(page, 4);
 		Page<Cliente> clientes = this.clienteService.findAll(pageRequest);
 		
@@ -81,9 +136,11 @@ public class ClienteController {
 		model.addAttribute("titulo", "Listado de Clientes");
 		model.addAttribute("clientes", clientes);
 		model.addAttribute("page", pageRender);
+		
 		return "listar";
 	}
 	
+	@Secured("ROLE_ADMIN")
 	@GetMapping("/form")
 	public String crear(Map<String, Object> model) {
 		Cliente cliente = new Cliente();
@@ -92,6 +149,7 @@ public class ClienteController {
 		return "form";
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/form/{id}")
 	public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 		Cliente cliente = null;
@@ -112,6 +170,7 @@ public class ClienteController {
 		return "form";
 	}
 	
+	@Secured("ROLE_ADMIN")
 	@PostMapping("/form")
 	public String guardar(
 			@Valid Cliente cliente, 
@@ -159,6 +218,7 @@ public class ClienteController {
 		return "redirect:/listar";
 	}
 	
+	@Secured("ROLE_ADMIN")
 	@GetMapping("/eliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		if (id > 0) {
@@ -174,4 +234,32 @@ public class ClienteController {
 		
 		return "redirect:/listar";
 	}
+	
+	/*
+	private boolean hasRole(String role) {
+		SecurityContext context = SecurityContextHolder.getContext();
+		
+		if (context == null) {
+			return false;
+		}
+		
+		Authentication auth = context.getAuthentication();
+		
+		if (auth == null) {
+			return false;
+		}
+		
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		
+		return authorities.contains(new SimpleGrantedAuthority(role));
+		
+		// for (GrantedAuthority authority: authorities) {
+		//	if (role.equals(authority.getAuthority())) {
+		//		logger.info("USUARIO ".concat(auth.getName().concat(" tiene el role:").concat(authority.getAuthority())));
+		//		return true;
+		//	}
+		//}
+		
+		//return false;
+	}*/
 }
