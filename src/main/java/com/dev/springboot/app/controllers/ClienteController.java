@@ -2,6 +2,7 @@ package com.dev.springboot.app.controllers;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Locale;
 // import java.util.Collection;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import javax.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -44,14 +46,17 @@ import com.dev.springboot.app.util.paginator.PageRender;
 
 @Controller
 @SessionAttributes("cliente")
-public class ClienteController {
-	protected final Log logger = LogFactory.getLog(getClass());
-	
+public class ClienteController {	
 	@Autowired
 	private IClienteService clienteService;
 	
 	@Autowired
 	private IUploadFileService uploadFileService;
+
+	@Autowired
+	private MessageSource messageSource;
+	
+	protected final Log logger = LogFactory.getLog(getClass());
 	
 	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/uploads/{filename:.+}")
@@ -73,7 +78,6 @@ public class ClienteController {
 	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
 	@GetMapping("/ver/{id}")
 	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
-		// Cliente cliente = this.clienteService.findOne(id);
 		Cliente cliente = this.clienteService.fetchByWithFacturas(id);
 		
 		if (cliente == null) {
@@ -92,28 +96,12 @@ public class ClienteController {
 			@RequestParam(name = "page", defaultValue = "0") int page, 
 			Model model,
 			Authentication authentication,
-			HttpServletRequest request
+			HttpServletRequest request,
+			Locale locale
 	) {
 		if (authentication != null) {
 			logger.info("Usuario autenticado, USERNAME: ".concat(authentication.getName()));
 		}
-		
-		/*
-		if (this.hasRole("ROLE_ADMIN")) {
-			logger.info("Administrador ".concat(authentication.getName().concat(" tienes acceso a los recursos")));
-		} else {
-			logger.info("Usuario ".concat(authentication.getName().concat(" NO tienes acceso a los recursos")));
-		}
-		*/
-		/*
-		SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "ROLE_");
-		
-		if (securityContext.isUserInRole("ADMIN")) {
-			logger.info("(Otra Forma) Administrador ".concat(authentication.getName().concat(" tienes acceso a los recursos")));
-		} else {
-			logger.info("(Otra Forma) Usuario ".concat(authentication.getName().concat(" NO tienes acceso a los recursos")));
-		}
-		*/
 		
 		if (request.isUserInRole("ADMIN")) {
 			logger.info("(Forma Request) Administrador ".concat(authentication.getName().concat(" tienes acceso a los recursos")));
@@ -121,19 +109,12 @@ public class ClienteController {
 			logger.info("(Forma Request) Usuario ".concat(authentication.getName().concat(" NO tienes acceso a los recursos")));
 		}
 		
-		/*
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
-		
-		if (authentication != null) {
-			logger.info("Usuario autenticado(forma estatica), USERNAME: ".concat(auth.getName()));
-		}
-		*/
 		Pageable pageRequest = PageRequest.of(page, 4);
 		Page<Cliente> clientes = this.clienteService.findAll(pageRequest);
 		
 		PageRender<Cliente> pageRender = new PageRender<>("/listar", clientes);
 		
-		model.addAttribute("titulo", "Listado de Clientes");
+		model.addAttribute("titulo", this.messageSource.getMessage("text.cliente.listar.titulo", null,locale));
 		model.addAttribute("clientes", clientes);
 		model.addAttribute("page", pageRender);
 		
@@ -202,7 +183,6 @@ public class ClienteController {
 			try {
 				uniqueFilename = this.uploadFileService.copy(foto);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -234,32 +214,4 @@ public class ClienteController {
 		
 		return "redirect:/listar";
 	}
-	
-	/*
-	private boolean hasRole(String role) {
-		SecurityContext context = SecurityContextHolder.getContext();
-		
-		if (context == null) {
-			return false;
-		}
-		
-		Authentication auth = context.getAuthentication();
-		
-		if (auth == null) {
-			return false;
-		}
-		
-		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-		
-		return authorities.contains(new SimpleGrantedAuthority(role));
-		
-		// for (GrantedAuthority authority: authorities) {
-		//	if (role.equals(authority.getAuthority())) {
-		//		logger.info("USUARIO ".concat(auth.getName().concat(" tiene el role:").concat(authority.getAuthority())));
-		//		return true;
-		//	}
-		//}
-		
-		//return false;
-	}*/
 }
