@@ -6,13 +6,13 @@
 	<div class="container">
 		<div class="card bg-light">
 			<div class="card-header">
-				<h3 th:text="${titulo}"></h3>
+				<h3 th:text="${titulo} + ' ' + ${cliente.nombre}"></h3>
 			</div>
 			<div class="card-body">
 				<h4 class="card-title">
 					<a class="btn btn-primary" 
 					   th:href="@{/factura/form/} + ${cliente.id}" 
-					   th:text="'Crear Factura'" 
+					   th:text="#{text.ver.factura}" 
 					   sec:authorize="hasRole('ROLE_ADMIN')" />
 				</h4>
 				<div class="row">
@@ -39,12 +39,12 @@
 					<table th:if="${not #lists.isEmpty(cliente.facturas)}" class="table table-bordered table-striped mt-5">
 						<thead class="table-dark">
 							<tr>
-								<th>Folio</th>
-								<th>Descripción</th>
-								<th>Fecha</th>
-								<th>Total</th>
-								<th sec:authorize="hasRole('ROLE_ADMIN')">Detalle</th>
-								<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th>
+								<th th:text="#{text.ver.folio}"></th>
+								<th th:text="#{text.ver.descripcion}"></th>
+								<th th:text="#{text.ver.fecha}"></th>
+								<th th:text="#{text.ver.total}"></th>
+								<th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{text.ver.detalle}"></th>
+								<th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{text.ver.eliminar}"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -54,12 +54,12 @@
 								<td th:text="${factura.createAt}"></td>
 								<td th:text="${factura.total}"></td>
 								<td sec:authorize="hasRole('ROLE_ADMIN')">
-									<a class="btn btn-primary btn-xs" th:href="@{'/factura/ver/'} + ${factura.id}" th:text="Ver"></a>
+									<a class="btn btn-primary btn-xs" th:href="@{'/factura/ver/'} + ${factura.id}" th:text="#{text.ver.ver}"></a>
 								</td>
 								<td sec:authorize="hasRole('ROLE_ADMIN')">
 									<a class="btn btn-danger" 
 									   th:href="@{'/factura/eliminar/'} + ${factura.id}" 
-									   th:text="Eliminar"
+									   th:text="#{text.ver.eliminar}"
 									   onclick="return confirm('¿Estas seguro que quieres eliminar la factura?')"></a>
 								</td>
 							</tr>

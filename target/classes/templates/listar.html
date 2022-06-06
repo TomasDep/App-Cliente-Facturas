@@ -15,13 +15,13 @@
 					<thead>
 						<tr>
 							<th sec:authorize="hasRole('ROLE_USER')">Id</th>
-							<th th:text="#{text.cliente.nombre}"}></th>
-							<th th:text="#{text.cliente.apellido}"}></th>
-							<th th:text="#{text.cliente.email}"}></th>
-							<th th:text="#{text.cliente.createAt}"}></th>
-							<th sec:authorize="hasRole('ROLE_ADMIN')">Crear Factura</th>
-							<th sec:authorize="hasRole('ROLE_ADMIN')">Editar</th>
-							<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th>
+							<th th:text="#{text.listar.cliente.nombre}"></th>
+							<th th:text="#{text.listar.cliente.apellido}"></th>
+							<th th:text="#{text.listar.cliente.email}"></th>
+							<th th:text="#{text.listar.cliente.createAt}"></th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{text.listar.cliente.factura}"></th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{text.listar.cliente.editar}"></th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{text.listar.cliente.eliminar}"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -38,17 +38,17 @@
 							<td sec:authorize="hasRole('ROLE_ADMIN')">
 								<a class="btn btn-warning" 
 								   th:href="@{/factura/form/} + ${cliente.id}" 
-								   th:text="'Crear Factura'" />
+								   th:text="#{text.listar.cliente.factura}" />
 							</td>
 							<td sec:authorize="hasRole('ROLE_ADMIN')">
 								<a class="btn btn-success" 
 								   th:href="@{/form/} + ${cliente.id}" 
-								   th:text="'Editar'" />
+								   th:text="#{text.listar.cliente.editar}" />
 							</td>
 							<td sec:authorize="hasRole('ROLE_ADMIN')">
 								<a class="btn btn-danger" 
 								   th:href="@{/eliminar/} + ${cliente.id}" 
-								   th:text="'Eliminar'" />
+								   th:text="#{text.listar.cliente.eliminar}" />
 							</td>
 						</tr>
 					</tbody>

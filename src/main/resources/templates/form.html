@@ -20,7 +20,7 @@
 					<div class="mt-3">
 						<div class="row g-3 align-items-center">
 							<div class="col-1">
-								<label for="nombre" class="col-form-label">Nombre</label>
+								<label for="nombre" class="col-form-label" th:text="#{text.form.cliente.nombre}"></label>
 							</div>
 							<div class="col-4">
 								<input type="text" 
@@ -39,7 +39,7 @@
 					<div class="mt-3">
 						<div class="row g-3 align-items-center">
 							<div class="col-1">
-								<label for="apellido" class="col-form-label">Apellido</label>
+								<label for="apellido" class="col-form-label" th:text="#{text.form.cliente.apellido}"></label>
 							</div>
 							<div class="col-4">
 								<input type="text" 
@@ -58,7 +58,7 @@
 					<div class="mt-3">
 						<div class="row g-3 align-items-center">
 							<div class="col-1">
-								<label for="email" class="col-form-label">Email</label>
+								<label for="email" class="col-form-label" th:text="#{text.form.cliente.email}"></label>
 							</div>
 							<div class="col-4">
 								<input type="text" 
@@ -77,7 +77,7 @@
 					<div class="mt-3">
 						<div class="row g-3 align-items-center">
 							<div class="col-1">
-								<label for="createAt" class="col-form-label">Fecha</label>
+								<label for="createAt" class="col-form-label" th:text="#{text.form.cliente.createAt}"></label>
 							</div>
 							<div class="col-4">
 								<input type="text" 
@@ -96,7 +96,7 @@
 					<div class="mt-3">
 						<div class="row g-3 align-items-center">
 							<div class="col-1">
-								<label for="file" class="col-form-label">Foto</label>
+								<label for="file" class="col-form-label" th:text="#{text.form.cliente.foto}"></label>
 							</div>
 							<div class="col-4">
 								<input type="file" name="file" class="form-control" />
@@ -106,7 +106,7 @@
 					<div class="mt-3">
 						<div class="row g-3 align-items-center">
 							<div class="col-auto">
-								<input type="submit" value="Crear Cliente" class="btn btn-secondary" />
+								<input type="submit" th:value="#{text.form.cliente.submit}" class="btn btn-secondary" />
 							</div>
 						</div>
 					</div>

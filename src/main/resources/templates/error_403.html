@@ -6,13 +6,13 @@
 	<div class="container">
 		<div class="card bg-danger text-white">
 			<div class="card-header">
-				<h1>Error: de Acceso Denegado!!!</h1>
+				<h1 th:text="#{text.error.403.titulo}"></h1>
 			</div>
 			<div class="card-body">
-				<h5 class="card-title">Lo sentimos <span th:text="${#authentication.name}"></span>,
-					No tienes permiso para acceder a este recurso.
+				<h5 class="card-title">
+					<span th:text="#{text.error.403.text1}"></span>&nbsp;<span th:text="${#authentication.name}"></span><span th:text="#{text.error.403.text2}"></span>
 				</h5>
-				<a th:href="@{/listar}" class="btn btn-lg btn-outline-light mt-2" role="button">Ir a Inicio</a>
+				<a th:href="@{/listar}" class="btn btn-lg btn-outline-light mt-2" role="button" th:text="#{text.error.403.listar}"></a>
 			</div>
 		</div>
 	</div>

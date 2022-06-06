@@ -24,10 +24,10 @@
 				<div class="collapse navbar-collapse" id="navbarNav">
 					<ul class="navbar-nav">
 						<li class="nav-item">
-							<a sec:authorize="isAuthenticated()" class="nav-link" th:href="@{/listar}">Clientes</a>
+							<a sec:authorize="isAuthenticated()" class="nav-link" th:href="@{/listar}" th:utext="#{text.layout.navbar.cliente}"></a>
 						</li>
 						<li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
-							<a class="nav-link" th:href="@{/form}">Crear Cliente</a>
+							<a class="nav-link" th:href="@{/form}" th:text="#{text.layout.navbar.crear}"></a>
 						</li>
 					</ul>
 					<ul class="navbar-nav ms-auto">
@@ -53,7 +53,7 @@
 						  	</ul>
 					  	</li>
 						<li class="nav-item" sec:authorize="!isAuthenticated()">
-							<a class="nav-link btn btn-outline-primary border-0" th:href="@{/login}">Login</a>
+							<a class="nav-link btn btn-outline-primary border-0" th:href="@{/login}" th:text="#{text.layout.login}"></a>
 						</li>
 						<li class="dropdown show" sec:authorize="isAuthenticated()">
 							<a class="btn btn-outline-primary dropdown-toggle"
@@ -68,8 +68,8 @@
 							 	<form th:action="@{/logout}" method="post" id="logoutForm">
 							 		<button class="dropdown-item"
 							 				type="submit" 
-							 				onclick="document.getElementById('logoutForm').submit();">
-							 				Sign Out
+							 				onclick="document.getElementById('logoutForm').submit();"
+							 				th:text="#{text.layout.signout}">
 							 		</button>
 							 		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 							 	</form>
@@ -92,19 +92,12 @@
 				<img class="mw-100 float-end" th:src="@{/images/spring.png}" alt="Spring Logo" />
 			</div>
 			<div class="col">
-				<p>
-					Powered by <a href="https://projects.spring.io/spring-boot">Spring Boot</a> y
-					<a href="http://www.thymeleaf.org">Thymeleaf</a>
-				</p>
+				<p th:utext="#{text.layout.footer.powered}"></p>
 				<p sec:authorize="isAuthenticated()">
-					Usuario Logeado: <span sec:authentication="name"></span> | Roles:
-					<span sec:authentication="principal.authorities"></span>
+					<span th:utext="#{text.layout.footer.user.logged}"></span>&nbsp;<span sec:authentication="name"></span>&nbsp;|
+					<span th:utext="#{text.layout.footer.user.role}"></span>&nbsp;<span sec:authentication="principal.authorities"></span>
 				</p>
-				<p>
-					Este proyecto fue desarrollado con el framework Spring 5 - Spring Boot 2.7: MVC, Thymeleaf y Data JPA,
-					Dev <a href="https://github.com/TomasDep">Tomás Valenzuela</a><br />
-					&copy; Company 2020, Inc. Todos los derechos reservados. Términos de uso y privacidad
-				</p>
+				<p th:utext="#{text.layout.footer.copyright}"></p>
 			</div>
 		</div>
 		<!-- JQuery -->

@@ -77,7 +77,12 @@ public class ClienteController {
 	
 	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
 	@GetMapping("/ver/{id}")
-	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+	public String ver(
+			@PathVariable(value = "id") Long id, 
+			Map<String, Object> model, 
+			RedirectAttributes flash,
+			Locale locale
+	) {
 		Cliente cliente = this.clienteService.fetchByWithFacturas(id);
 		
 		if (cliente == null) {
@@ -86,7 +91,7 @@ public class ClienteController {
 		}
 		
 		model.put("cliente", cliente);
-		model.put("titulo", "Detalle cliente: " + cliente.getNombre());
+		model.put("titulo", this.messageSource.getMessage("text.ver.titulo", null, locale));
 		
 		return "ver";
 	}
@@ -114,7 +119,7 @@ public class ClienteController {
 		
 		PageRender<Cliente> pageRender = new PageRender<>("/listar", clientes);
 		
-		model.addAttribute("titulo", this.messageSource.getMessage("text.cliente.listar.titulo", null,locale));
+		model.addAttribute("titulo", this.messageSource.getMessage("text.listar.cliente.titulo", null, locale));
 		model.addAttribute("clientes", clientes);
 		model.addAttribute("page", pageRender);
 		
@@ -123,16 +128,20 @@ public class ClienteController {
 	
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/form")
-	public String crear(Map<String, Object> model) {
+	public String crear(Map<String, Object> model, Locale locale) {
 		Cliente cliente = new Cliente();
 		model.put("cliente", cliente);
-		model.put("titulo", "Formulario de Cliente");
+		model.put("titulo", this.messageSource.getMessage("text.form.cliente.crear.titulo", null, locale));
 		return "form";
 	}
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/form/{id}")
-	public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+	public String editar(
+			@PathVariable(value = "id") Long id, Map<String, Object> model, 
+			RedirectAttributes flash,
+			Locale locale
+	) {
 		Cliente cliente = null;
 		
 		if (id > 0) {
@@ -147,7 +156,7 @@ public class ClienteController {
 		}
 		
 		model.put("cliente", cliente);
-		model.put("titulo", "Editar Cliente");
+		model.put("titulo", this.messageSource.getMessage("text.form.cliente.editar.titulo", null, locale));
 		return "form";
 	}
 	
