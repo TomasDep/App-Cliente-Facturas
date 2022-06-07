@@ -81,7 +81,7 @@ public class FacturaController {
 		Factura factura = this.clienteService.fetchByIdWithClienteWithItemFacturaWithProducto(id);
 		
 		if (factura == null) {
-			flash.addFlashAttribute("error", "La factura no existe en la base de datos");
+			flash.addFlashAttribute("error", this.messageSource.getMessage("text.error.factura.notExist", null, locale));
 			return "redirect:/listar";
 		}
 		
