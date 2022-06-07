@@ -69,5 +69,6 @@ local.properties
 
 ## External Files ##
 env-config.txt
+uploads/**
 
 # End of https://www.toptal.com/developers/gitignore/api/eclipse

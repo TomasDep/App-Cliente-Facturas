@@ -33,7 +33,7 @@
 				</div>
 				<div class="alert alert-info mt-5" 
 					 th:if="${#lists.isEmpty(cliente.facturas)}"
-					 th:text="'No hay facturas asignadas para el cliente ' + ${cliente.nombre} + ' ' + ${cliente.apellido}">
+					 th:text="#{text.ver.alert} + ' ' + ${cliente.nombre} + ' ' + ${cliente.apellido}">
 				</div>
 				<div class="row">
 					<table th:if="${not #lists.isEmpty(cliente.facturas)}" class="table table-bordered table-striped mt-5">

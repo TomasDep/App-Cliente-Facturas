@@ -86,7 +86,7 @@ public class ClienteController {
 		Cliente cliente = this.clienteService.fetchByWithFacturas(id);
 		
 		if (cliente == null) {
-			flash.addFlashAttribute("error", "El cliente no existe en la base de datos");
+			flash.addFlashAttribute("error", this.messageSource.getMessage("text.error.cliente.notExist", null, locale));
 			return "redirect:/listar";
 		}
 		
@@ -109,9 +109,9 @@ public class ClienteController {
 		}
 		
 		if (request.isUserInRole("ADMIN")) {
-			logger.info("(Forma Request) Administrador ".concat(authentication.getName().concat(" tienes acceso a los recursos")));
+			logger.info("Administrador ".concat(authentication.getName().concat(" tienes acceso a los recursos")));
 		} else {
-			logger.info("(Forma Request) Usuario ".concat(authentication.getName().concat(" NO tienes acceso a los recursos")));
+			logger.info("Usuario ".concat(authentication.getName().concat(" NO tienes acceso a los recursos")));
 		}
 		
 		Pageable pageRequest = PageRequest.of(page, 4);
@@ -147,11 +147,11 @@ public class ClienteController {
 		if (id > 0) {
 			cliente = this.clienteService.findOne(id);
 			if (cliente == null) {
-				flash.addFlashAttribute("error", "El ID de cliente no existe en la base de datos...");
+				flash.addFlashAttribute("error", this.messageSource.getMessage("text.error.cliente.idError", null, locale));
 				return "redirect:/listar";
 			}
 		} else {
-			flash.addFlashAttribute("error", "El ID del cliente no puede ser cero...");
+			flash.addFlashAttribute("error", this.messageSource.getMessage("text.error.cliente.idZero", null, locale));
 			return "redirect:/listar";
 		}
 		
@@ -168,12 +168,20 @@ public class ClienteController {
 			Model model,
 			@RequestParam("file") MultipartFile foto,
 			RedirectAttributes flash,
-			SessionStatus status
+			SessionStatus status,
+			Locale locale
 	) {
 		if (result.hasErrors()) {
-			model.addAttribute("titulo", "Formulario de Cliente");
+			if (cliente.getId() != null) {
+				model.addAttribute("titulo", this.messageSource.getMessage("text.form.cliente.editar.titulo", null, locale));
+			} else {
+				model.addAttribute("titulo", this.messageSource.getMessage("text.form.cliente.crear.titulo", null, locale));
+			}
+			
 			return "form";
 		}
+		
+		String uniqueFilename = "";
 		
 		if (!foto.isEmpty()) {
 			if (
@@ -182,12 +190,8 @@ public class ClienteController {
 				cliente.getFoto() != null && 
 				cliente.getFoto().length() > 0
 			) {
-			
 				this.uploadFileService.delete(cliente.getFoto());
-				
 			}
-			
-			String uniqueFilename = null;
 			
 			try {
 				uniqueFilename = this.uploadFileService.copy(foto);
@@ -195,11 +199,19 @@ public class ClienteController {
 				e.printStackTrace();
 			}
 			
-			flash.addFlashAttribute("info", "Has subido correctamente '" + uniqueFilename + "'");
+			flash.addFlashAttribute("info", this.messageSource.getMessage("text.info.cliente.foto", null, locale));
+			cliente.setFoto(uniqueFilename);
+		} else {
 			cliente.setFoto(uniqueFilename);
 		}
 		
-		String mensajeFlash = (cliente.getId() != null)? "Cliente editado con éxito" : "Cliente creado con éxito";
+		String mensajeFlash = null;
+		
+		if (cliente.getId() != null) {
+			mensajeFlash = this.messageSource.getMessage("text.success.cliente.editar", null, locale);
+		} else {
+			mensajeFlash = this.messageSource.getMessage("text.success.cliente.crear", null, locale);
+		}
 		
 		this.clienteService.save(cliente);
 		status.setComplete();
@@ -209,15 +221,15 @@ public class ClienteController {
 	
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/eliminar/{id}")
-	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
+	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash, Locale locale) {
 		if (id > 0) {
 			Cliente cliente = this.clienteService.findOne(id);
 			this.clienteService.delete(id);
 			
-			flash.addFlashAttribute("success", "Cliente eliminado con éxito");
+			flash.addFlashAttribute("success", this.messageSource.getMessage("text.success.cliente.eliminar", null, locale));
 					
 			if (this.uploadFileService.delete(cliente.getFoto())) {
-				flash.addFlashAttribute("info", "Foto " + cliente.getFoto() + " eliminada con éxito");
+				flash.addFlashAttribute("info", this.messageSource.getMessage("text.info.cliente.deleteFoto", null, locale));
 			}
 		}
 		

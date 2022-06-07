@@ -5,16 +5,16 @@
 	<header th:replace="layout/layout :: header"></header>
 	<div class="container">
 		<div class="card card-boder-primary">
-			<div class="card-header text-center">Sign In</div>
+			<div class="card-header text-center" th:text="#{text.login.title}"></div>
 			<div class="card-body">
 				<form th:action="@{/login}" method="post">
 					<div class="row mt-3">
 						<div class="col-6">
 							<input class="form-control" 
 								   type="text" 
-								   name="username" 
+								   name="username"
 								   id="username" 
-								   placeholder="Username" 
+								   th:placeholder="#{text.login.username}" 
 								   autofocus
 								   required />
 						</div>
@@ -25,13 +25,13 @@
 								   type="password" 
 								   name="password" 
 								   id="password" 
-								   placeholder="Password" 
+								   th:placeholder="#{text.login.password}"
 								   required />
 						</div>
 					</div>
 					<div class="row mt-3">
 						<div class="col-3">
-							<input class="btn btn-lg btn-primary" type="submit" value="Sign In"/>
+							<input class="btn btn-lg btn-primary" type="submit" th:value="#{text.login.submit}" />
 						</div>
 					</div>
 				</form>

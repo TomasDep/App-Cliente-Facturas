@@ -45,7 +45,7 @@ public class UploadFileImp implements IUploadFileService {
 		
 		Files.copy(file.getInputStream(), rootPath);
 		
-		return uniqueFilename; 
+		return uniqueFilename;
 	}
 
 	@Override
