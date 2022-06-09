@@ -3,7 +3,6 @@ package com.dev.springboot.app.controllers;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Locale;
-// import java.util.Collection;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,11 +15,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-// import org.springframework.security.core.GrantedAuthority;
-// import org.springframework.security.core.authority.SimpleGrantedAuthority;
-// import org.springframework.security.core.context.SecurityContext;
-// import org.springframework.security.core.context.SecurityContextHolder;
-// import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -58,6 +52,8 @@ public class ClienteController {
 	
 	protected final Log logger = LogFactory.getLog(getClass());
 	
+	private static final String IMG_EXTENSION_VALIDATION = "image\\/(jpg|jpeg|png)$";
+	
 	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/uploads/{filename:.+}")
 	public ResponseEntity<Resource> verFoto(@PathVariable String filename) {
@@ -90,8 +86,10 @@ public class ClienteController {
 			return "redirect:/listar";
 		}
 		
+		String titulo = String.format(this.messageSource.getMessage("text.ver.titulo", null, locale), cliente.getNombre().concat(" ").concat(cliente.getApellido()));
+		
 		model.put("cliente", cliente);
-		model.put("titulo", this.messageSource.getMessage("text.ver.titulo", null, locale));
+		model.put("titulo", titulo);
 		
 		return "ver";
 	}
@@ -179,6 +177,17 @@ public class ClienteController {
 			}
 			
 			return "form";
+		}
+		
+		if (!foto.getContentType().matches(IMG_EXTENSION_VALIDATION)) {
+			flash.addFlashAttribute("error", this.messageSource.getMessage("text.error.cliente.foto.extension", null, locale));
+			if (cliente.getId() != null) {
+				model.addAttribute("titulo", this.messageSource.getMessage("text.form.cliente.editar.titulo", null, locale));
+				return "redirect:/form/" + cliente.getId();
+			} else {
+				model.addAttribute("titulo", this.messageSource.getMessage("text.form.cliente.crear.titulo", null, locale));
+				return "redirect:/form";
+			}
 		}
 		
 		String uniqueFilename = "";

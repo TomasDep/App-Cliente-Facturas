@@ -3,6 +3,10 @@
 	font-weight: 500;
 }
 
+.none {
+	display: none;
+}
+
 .mw-20-rem {
 	max-width: 20rem;
 }

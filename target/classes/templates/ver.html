@@ -2,11 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="layout/layout :: head"></head>
 <body>
+	<div id="i18n_alert_remove" th:text="#{text.ver.alert.eliminar}" class="none" />
 	<header th:replace="layout/layout :: header"></header>
 	<div class="container">
 		<div class="card bg-light">
 			<div class="card-header">
-				<h3 th:text="${titulo} + ' ' + ${cliente.nombre}"></h3>
+				<h3 th:text="${titulo}"></h3>
 			</div>
 			<div class="card-body">
 				<h4 class="card-title">
@@ -60,7 +61,7 @@
 									<a class="btn btn-danger" 
 									   th:href="@{'/factura/eliminar/'} + ${factura.id}" 
 									   th:text="#{text.ver.eliminar}"
-									   onclick="return confirm('¿Estas seguro que quieres eliminar la factura?')"></a>
+									   onclick="return confirm(document.getElementById('i18n_alert_remove').innerHTML)"></a>
 								</td>
 							</tr>
 						</tbody>

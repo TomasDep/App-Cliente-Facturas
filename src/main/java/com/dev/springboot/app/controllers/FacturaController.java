@@ -85,8 +85,10 @@ public class FacturaController {
 			return "redirect:/listar";
 		}
 		
+		String titulo = String.format(this.messageSource.getMessage("text.ver.factura.titulo", null, locale), factura.getDescripcion());
+		
 		model.addAttribute("factura", factura);
-		model.addAttribute("titulo", this.messageSource.getMessage("text.ver.factura.titulo", null, locale));
+		model.addAttribute("titulo", titulo);
 		
 		return "factura/ver";
 	}
