@@ -13,6 +13,8 @@ Es una aplicación multilenguaje creada con la arquitectura **MVC** con **Java S
  - Bases de Datos MySQL
  - [Open PDF](https://github.com/LibrePDF/OpenPDF)
  - Apache POI (Para archivos xlsx)
+ - Super Csv
+ - JAXB API
 
 # UML
 ## Diagrama de clases

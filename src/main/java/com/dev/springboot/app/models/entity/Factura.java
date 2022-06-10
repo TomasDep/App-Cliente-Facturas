@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "facturas")
@@ -58,6 +59,7 @@ public class Factura implements Serializable {
 		return createAt;
 	}
 
+	@XmlTransient
 	public Cliente getCliente() {
 		return cliente;
 	}
