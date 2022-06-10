@@ -96,7 +96,8 @@ public class ClienteController {
 	
 	@GetMapping({"/listar", "/"})
 	public String listar(
-			@RequestParam(name = "page", defaultValue = "0") int page, 
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "format", defaultValue = "html") String format,
 			Model model,
 			Authentication authentication,
 			HttpServletRequest request,
@@ -112,14 +113,19 @@ public class ClienteController {
 			logger.info("Usuario ".concat(authentication.getName().concat(" NO tienes acceso a los recursos")));
 		}
 		
-		Pageable pageRequest = PageRequest.of(page, 4);
-		Page<Cliente> clientes = this.clienteService.findAll(pageRequest);
+		if (format.equals("html")) {
+			Pageable pageRequest = PageRequest.of(page, 4);
+			Page<Cliente> clientes = this.clienteService.findAll(pageRequest);
+			
+			PageRender<Cliente> pageRender = new PageRender<>("/listar", clientes);
+			
+			model.addAttribute("titulo", this.messageSource.getMessage("text.listar.cliente.titulo", null, locale));
+			model.addAttribute("clientes", clientes);
+			model.addAttribute("page", pageRender);
+		} else {
+			model.addAttribute("clientes", this.clienteService.findAll());
+		}
 		
-		PageRender<Cliente> pageRender = new PageRender<>("/listar", clientes);
-		
-		model.addAttribute("titulo", this.messageSource.getMessage("text.listar.cliente.titulo", null, locale));
-		model.addAttribute("clientes", clientes);
-		model.addAttribute("page", pageRender);
 		
 		return "listar";
 	}

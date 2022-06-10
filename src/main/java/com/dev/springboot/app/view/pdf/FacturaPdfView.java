@@ -32,10 +32,12 @@ public class FacturaPdfView extends AbstractPdfView {
 		
 		MessageSourceAccessor mensajes = getMessageSourceAccessor();
 		
+		document.addTitle("Factura_" + factura.getCliente().getNombre() + "_" + factura.getCliente().getApellido());
+			
+		PdfPCell cell = null;
+		
 		PdfPTable tabla = new PdfPTable(1);
 		tabla.setSpacingAfter(20);
-		
-		PdfPCell cell = null;
 		
 		cell = new PdfPCell(new Phrase(mensajes.getMessage("text.ver.factura.cliente")));
 		cell.setBackgroundColor(new Color(184, 218, 255));
