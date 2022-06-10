@@ -1,6 +1,6 @@
 # App-Cliente-Facturas
 App orientada a la gestión de las facturas de clientes de una empresa X.
-Es una aplicación multilenguaje creada con la arquitectura **MVC** con **Java Spring Boot** en Backend y **Thymeleaf** en Frontend, junto con la implementación
+Es una aplicación multilenguaje creada con la arquitectura **MVC** con **Java Spring Boot** en Backend y **Thymeleaf** en Frontend
 
 # Tecnologías
  - Java JDK 17
