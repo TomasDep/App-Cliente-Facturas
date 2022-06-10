@@ -26,7 +26,7 @@ public class SpringSecurityConfig {
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/listar", "/locale").permitAll()
+		http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/listar**", "/locale").permitAll()
 			.antMatchers("/uploads/**").hasAnyRole("USER")
 			.anyRequest().authenticated()
 			.and()
